@@ -2,20 +2,23 @@
 
 var http = require('http')
 
+var aws = require("./libs/aws");
+
 var port = process.env.PORT || 1337;
 
 http.createServer(function (req, res) {
+    var accessKeyId = "AKIAISWN4YIRSTNPXR3A";
+
+    var secretAccessKey = "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";
+
+    ses = aws.createSESClient(accessKeyId, secretAccessKey);
+
     res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Hello Azure');
+
+    ses.call("ListVerifiedEmailAddresses", {}, function (err, result) {
+        res.end(JSON.stringify(result));
+    });
 }).listen(port)
-
-//var aws = require("./libs/aws");
-
-//var accessKeyId = "AKIAISWN4YIRSTNPXR3A";
-
-//var secretAccessKey = "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";
-
-//ses = aws.createSESClient(accessKeyId, secretAccessKey);
 
 //ses.call("GetSendQuota", {}, function (err, result) {
 //    console.log(JSON.stringify(result));
@@ -25,9 +28,6 @@ http.createServer(function (req, res) {
 //    console.log(JSON.stringify(result));
 //});
 
-//ses.call("ListVerifiedEmailAddresses", {}, function (err, result) {
-//    console.log(JSON.stringify(result));
-//});
 
 //var recipient_address = 'oscar@informatech.cr';
 //var sender_address = 'oscar.mendez@informatech.cr';
